@@ -47,7 +47,7 @@ public class WaterfallChartNodeModel extends NodeModel {
     private static final NodeLogger logger = NodeLogger
             .getLogger(WaterfallChartNodeModel.class);
     
-    //setting keys
+    //dialog setting keys
 	static final String CFGKEY_BINNED_COLUMN_NAME = "binnedColumnName";
 	static final String CFGKEY_TARGET_COLUMN_NAME = "targetColumnName";
 	// 	to be created
