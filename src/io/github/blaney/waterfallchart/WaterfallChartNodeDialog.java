@@ -31,5 +31,6 @@ public class WaterfallChartNodeDialog extends DefaultNodeSettingsPane {
 		//		2) rename column steps (adding in the viz ops section)
 		//		3) value prefix ("$", "euro", etc.)
 		//		4) chrono-binning
+		//		5) in the views tab, add a pixel adjustment for the line between columns
 	}
 }

@@ -1,5 +1,7 @@
 package io.github.blaney.waterfallchart;
 
+import java.awt.Rectangle;
+import java.awt.geom.Line2D;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -16,6 +18,8 @@ public class ChartColumn {
 	private double m_columnRange;
 	private double m_columnMean;
 	private int m_numberOfEntries;
+	private Rectangle m_viewRepresentation;
+	private Line2D m_columnConnectorLine;
 
 	public ChartColumn(final String colName, final BufferedDataTable input, final int tarColIndex,
 			final int binColIndex) {
@@ -48,6 +52,22 @@ public class ChartColumn {
 		m_columnMean = m_columnTotal / m_numberOfEntries;
 		m_columnRange = Math.abs(m_minValue - m_maxValue);
 
+	}
+	
+	public Rectangle getViewRepresentation() {
+		return m_viewRepresentation;
+	}
+	
+	public void setViewRepresentation(final Rectangle rect) {
+		m_viewRepresentation = rect;
+	}
+	
+	public Line2D getColumnConnectorLine() {
+		return m_columnConnectorLine;
+	}
+	
+	public void setColumnConnectorLine(final Line2D line) {
+		m_columnConnectorLine = line;
 	}
 
 	public double getColumnTotal() {
