@@ -2,16 +2,21 @@ package io.github.blaney.waterfallchart;
 
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.knime.core.data.DataRow;
 import org.knime.core.data.RowKey;
 import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.ModelContentRO;
+import org.knime.core.node.ModelContentWO;
 
 public class ChartColumn {
-	private final String m_columnName;
+	// internal keys
 	private final Set<RowKey> m_columnRowKeys;
+	private String m_columnName;
 	private double m_columnTotal;
 	private double m_minValue;
 	private double m_maxValue;
@@ -20,7 +25,20 @@ public class ChartColumn {
 	private int m_numberOfEntries;
 	private Rectangle m_viewRepresentation;
 	private Line2D m_columnConnectorLine;
+	// external model keys
+	private static final String COL_NAME = "colName";
+	private static final String COL_KEY_SET = "colKeySet";
+	private static final String COL_TOTAL = "colTotal";
+	private static final String COL_MIN = "colMin";
+	private static final String COL_MAX = "colMax";
+	private static final String COL_RANGE = "colRange";
+	private static final String COL_MEAN = "colMean";
+	private static final String COL_NUM_ENTRIES = "colNumEntries";
 
+	public ChartColumn() {
+		m_columnRowKeys = new LinkedHashSet<RowKey>();
+	}
+	
 	public ChartColumn(final String colName, final BufferedDataTable input, final int tarColIndex,
 			final int binColIndex) {
 		m_columnName = colName;
@@ -29,7 +47,7 @@ public class ChartColumn {
 		m_maxValue = Double.MIN_VALUE;
 		for (DataRow row : input) {
 			try {
-				//if the row does not belong in this column, move on
+				// if the row does not belong in this column, move on
 				if (row.getCell(binColIndex).toString() != m_columnName) {
 					continue;
 				}
@@ -53,19 +71,19 @@ public class ChartColumn {
 		m_columnRange = Math.abs(m_minValue - m_maxValue);
 
 	}
-	
+
 	public Rectangle getViewRepresentation() {
 		return m_viewRepresentation;
 	}
-	
+
 	public void setViewRepresentation(final Rectangle rect) {
 		m_viewRepresentation = rect;
 	}
-	
+
 	public Line2D getColumnConnectorLine() {
 		return m_columnConnectorLine;
 	}
-	
+
 	public void setColumnConnectorLine(final Line2D line) {
 		m_columnConnectorLine = line;
 	}
@@ -85,12 +103,69 @@ public class ChartColumn {
 	public int getNumberOfEntries() {
 		return m_numberOfEntries;
 	}
-	
+
 	public double getColumnMin() {
 		return m_minValue;
 	}
-	
+
 	public double getColumnMax() {
 		return m_maxValue;
 	}
+	
+	private void setColumnName(String thisVal) {
+		m_columnName = thisVal;
+	}
+	
+	private void setColumnTotal(double thisVal) {
+		m_columnTotal = thisVal;
+	}
+	
+	private void setColumnRange(double thisVal) {
+		m_columnRange = thisVal;
+	}
+
+	private void setColumnMean(double thisVal) {
+		m_columnMean = thisVal;
+	}
+
+	private void setNumberOfEntries(int thisVal) {
+		m_numberOfEntries = thisVal;
+	}
+
+	private void setColumnMin(double thisVal) {
+		m_minValue = thisVal;
+	}
+
+	private void setColumnMax(double thisVal) {
+		m_maxValue = thisVal;
+	}
+	
+
+	public void saveTo(final ModelContentWO modelContent) {
+		RowKey[] keysArr = new RowKey[m_columnRowKeys.size()];
+		m_columnRowKeys.toArray(keysArr);
+		// saving internals
+		modelContent.addRowKeyArray(COL_KEY_SET, keysArr);
+		modelContent.addString(COL_NAME, m_columnName);
+		modelContent.addDouble(COL_TOTAL, m_columnTotal);
+		modelContent.addDouble(COL_MIN, m_minValue);
+		modelContent.addDouble(COL_MAX, m_maxValue);
+		modelContent.addDouble(COL_RANGE, m_columnRange);
+		modelContent.addDouble(COL_MEAN, m_columnMean);
+		modelContent.addInt(COL_NUM_ENTRIES, m_numberOfEntries);
+	}
+
+	public void loadFrom (final ModelContentRO modelContent) throws InvalidSettingsException {
+		//loading internals
+		RowKey[] keysArr = modelContent.getRowKeyArray(COL_KEY_SET);
+		m_columnRowKeys.addAll(Arrays.asList(keysArr));
+		setColumnName(modelContent.getString(COL_NAME));
+		setColumnTotal(modelContent.getDouble(COL_TOTAL));
+		setColumnMin(modelContent.getDouble(COL_MIN));
+		setColumnMax(modelContent.getDouble(COL_MAX));
+		setColumnRange(modelContent.getDouble(COL_RANGE));
+		setColumnMean(modelContent.getDouble(COL_MEAN));
+		setNumberOfEntries(modelContent.getInt(COL_NUM_ENTRIES));
+	}
+
 }

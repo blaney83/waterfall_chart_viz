@@ -1,6 +1,8 @@
 package io.github.blaney.waterfallchart;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -27,6 +29,9 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.ModelContent;
+import org.knime.core.node.ModelContentRO;
+import org.knime.core.node.ModelContentWO;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
@@ -47,23 +52,27 @@ public class WaterfallChartNodeModel extends NodeModel {
     private static final NodeLogger logger = NodeLogger
             .getLogger(WaterfallChartNodeModel.class);
     
-    //dialog setting keys
+    //internally saved setting keys
 	static final String CFGKEY_BINNED_COLUMN_NAME = "binnedColumnName";
 	static final String CFGKEY_TARGET_COLUMN_NAME = "targetColumnName";
+	static final String CFGKEY_NUM_COLUMNS = "numColumns";
 	// 	to be created
 	//	private WaterfallChartModel m_model;
 	
 	//internal keys
 	private static final String FILE_NAME = "waterfallChartInternals.xml";
 	private static final String INTERNAL_MODEL = "internalModel";
+	private static final String CHART_COLUMN = "chartColumn";
 	
 	//local keys
 	private List<ChartColumn> m_chartColumns;
 	private Set<String> m_columnNames;
-	private int m_numColumns;
-	
+
+	//externally saved settings
 	private final SettingsModelString m_binnedColumn = new SettingsModelString(WaterfallChartNodeModel.CFGKEY_BINNED_COLUMN_NAME, "");
 	private final SettingsModelString m_targetColumn = new SettingsModelString(WaterfallChartNodeModel.CFGKEY_TARGET_COLUMN_NAME, "");
+	private final SettingsModelIntegerBounded m_numColumns = new SettingsModelIntegerBounded(WaterfallChartNodeModel.CFGKEY_NUM_COLUMNS,
+			1, 1, Integer.MAX_VALUE);
 
     /**
      * Constructor for the node model.
@@ -78,11 +87,11 @@ public class WaterfallChartNodeModel extends NodeModel {
     	int binColIndex = inData[IN_PORT].getDataTableSpec().findColumnIndex(m_binnedColumn.getStringValue());
     	int tarColIndex = inData[IN_PORT].getDataTableSpec().findColumnIndex(m_targetColumn.getStringValue());    	    	
     	m_columnNames = retrieveBins(inData[IN_PORT], binColIndex);
-    	m_numColumns = m_columnNames.size();
-    	if(m_numColumns > 20) {
+    	m_numColumns.setIntValue(m_columnNames.size());
+    	if(m_numColumns.getIntValue() > 20) {
     		//send warning: bad visibility likely
     	}
-    	m_chartColumns = new ArrayList<ChartColumn>(m_numColumns);
+    	m_chartColumns = new ArrayList<ChartColumn>(m_numColumns.getIntValue());
     	for(String colName : m_columnNames) {
     		//might switch from array list to array
     		m_chartColumns.add(new ChartColumn(colName, inData[IN_PORT], tarColIndex, binColIndex));
@@ -167,14 +176,42 @@ public class WaterfallChartNodeModel extends NodeModel {
     protected void loadInternals(final File internDir,
             final ExecutionMonitor exec) throws IOException,
             CanceledExecutionException {
-
+    	m_chartColumns = new ArrayList<ChartColumn>(m_numColumns.getIntValue());
+    	
+    	File file = new File(internDir, FILE_NAME);
+    	FileInputStream fis = new FileInputStream(file);
+    	ModelContentRO modelContent = ModelContent.loadFromXML(fis);
+    	
+    	try {
+    		//should modify save to use numeric iterable for loop for consistency
+    		//should also switch m_chartColumns from ArrayList to ChartColumn[]
+    		for(int i = 0; i < m_numColumns.getIntValue(); i ++) {
+    			ChartColumn chartCol = new ChartColumn();
+    			ModelContentRO subContent = modelContent.getModelContent(CHART_COLUMN + i);
+    			chartCol.loadFrom(subContent);
+    			m_chartColumns.add(i, chartCol);
+    		}
+    	}catch (InvalidSettingsException e) {
+    		throw new IOException("There was a problem loading the saved internal state of this node. Please clear and re-execute the node.");
+    	}
     }
     
     @Override
     protected void saveInternals(final File internDir,
             final ExecutionMonitor exec) throws IOException,
             CanceledExecutionException {
-
+    	if(m_chartColumns != null) {
+    		ModelContent modelContent = new ModelContent(INTERNAL_MODEL);
+    		int count = 0;
+    		for(ChartColumn chartCol : m_chartColumns) {
+    			ModelContentWO subContent = modelContent.addModelContent(CHART_COLUMN + count);
+    			chartCol.saveTo(subContent);
+    			count++;
+    		}
+    		File file = new File(internDir, FILE_NAME);
+    		FileOutputStream fos = new FileOutputStream(file);
+    		modelContent.saveToXML(fos);
+    	}
     }
 
 }
