@@ -29,7 +29,8 @@ import org.knime.core.node.property.hilite.KeyEvent;
 public class WaterfallChartNodeView extends NodeView<WaterfallChartNodeModel> implements HiLiteListener {
 
 	// Custom Components
-	private WaterfallChartViewPanel v_panel;
+//	private WaterfallChartViewPanel v_panel;
+	private WaterfallChartViewBorderPanel v_panel;
 	private Popup popup;
 
 	// JMenu items
@@ -45,7 +46,8 @@ public class WaterfallChartNodeView extends NodeView<WaterfallChartNodeModel> im
 	// constructor
 	protected WaterfallChartNodeView(final WaterfallChartNodeModel nodeModel) {
 		super(nodeModel);
-		v_panel = new WaterfallChartViewPanel(new ChartColumn[0]);
+//		v_panel = new WaterfallChartViewPanel(new ChartColumn[0]);
+		v_panel = new WaterfallChartViewBorderPanel(new WaterfallChartViewPanel(new ChartColumn[0]));
 		setComponent(v_panel);
 		v_selected = new LinkedHashSet<ChartColumn>();
 

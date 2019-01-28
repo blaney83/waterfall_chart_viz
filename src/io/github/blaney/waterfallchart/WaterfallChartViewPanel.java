@@ -1,18 +1,22 @@
 package io.github.blaney.waterfallchart;
 
 import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.knime.core.data.property.ColorAttr;
@@ -29,6 +33,8 @@ public class WaterfallChartViewPanel extends JPanel {
 	// constructors
 	public WaterfallChartViewPanel(final ChartColumn[] columns) {
 		vp_columns = columns;
+		//new main panel
+		//set content pane
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 	}
 
@@ -255,31 +261,11 @@ public class WaterfallChartViewPanel extends JPanel {
 				vp_columns = initViewColumnArr;
 			}
 
-			
-//			
-//	        for (int i = 0; i < yTickMarks + 1; i++) {
-//	        	
-//	            int x0 = padding + labelPadding;
-//	            int x1 = pointWidth + padding + labelPadding;
-//	            int y0 = getHeight()
-//	                    - ((i * (getHeight() - padding * 2 - labelPadding)) / yTickMarks + padding + labelPadding);
-//	            int y1 = y0;
-//	            if (scores.size() > 0) {
-//	                g2.setColor(gridColor);
-//	                g2.drawLine(padding + labelPadding + 1 + pointWidth, y0, getWidth() - padding, y1);
-//	                g2.setColor(Color.BLACK);
-//	                String yLabel = ((int) ((getMinScore()
-//	                        + (getMaxScore() - getMinScore()) * ((i * 1.0) / yTickMarks)) * 100)) / 100.0 + "";
-//	                FontMetrics metrics = g2.getFontMetrics();
-//	                int labelWidth = metrics.stringWidth(yLabel);
-//	                g2.drawString(yLabel, x0 - labelWidth - 5, y0 + (metrics.getHeight() / 2) - 3);
-//	            }
-//	            g2.drawLine(x0, y0, x1, y1);
-//	        }
 		}
 	}
 
 	public ChartColumn[] getColumns() {
 		return vp_columns;
 	}
+	
 }
