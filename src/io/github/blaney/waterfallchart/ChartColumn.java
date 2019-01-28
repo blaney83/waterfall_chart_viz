@@ -41,7 +41,6 @@ public class ChartColumn {
 	
 	public ChartColumn() {
 		m_columnRowKeys = new LinkedHashSet<RowKey>();
-		System.out.println("WRONG FIRING");
 	}
 	
 	//net column constructor
@@ -61,7 +60,6 @@ public class ChartColumn {
 	
 	public ChartColumn(final String colName, final BufferedDataTable input, final int tarColIndex,
 			final int binColIndex) {
-		System.out.println("MAIN FIRING");
 		m_columnName = colName.trim();
 		m_columnRowKeys = new LinkedHashSet<RowKey>();
 		m_minValue = Double.MAX_VALUE;
@@ -71,16 +69,14 @@ public class ChartColumn {
 				// if the row does not belong in this column, move on
 				
 				if (!row.getCell(binColIndex).toString().trim().equals(m_columnName)) {
-					System.out.println("continuing");
-					System.out.println(row.getCell(binColIndex).toString());
-					System.out.println(m_columnName);
+
 					continue;
 				}
-				// prevent erroneous multiple additions of target row values
+
 				m_columnRowKeys.add(row.getKey());
+				// prevent erroneous multiple additions of target row values
 //				if (m_columnRowKeys.add(row.getKey())) {
 					double cellValue = Double.parseDouble(row.getCell(tarColIndex).toString());
-					System.out.println(cellValue);
 					if (cellValue < m_minValue) {
 						setColumnMin(cellValue);
 					}
@@ -88,11 +84,9 @@ public class ChartColumn {
 						setColumnMax(cellValue);
 					}
 					m_columnTotal += cellValue;
-					System.out.println("Col tot: " + m_columnTotal);
 					m_numberOfEntries++;
 //				}
 			} catch (NullPointerException e) {
-				System.out.println("somethings wrong");
 				// add warning of missing values
 			}
 		}
