@@ -5,24 +5,14 @@ import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.knime.core.data.DataCell;
-import org.knime.core.data.DataColumnDomain;
 import org.knime.core.data.DataColumnSpec;
-import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.DoubleValue;
-import org.knime.core.data.RowKey;
-import org.knime.core.data.def.DefaultRow;
-import org.knime.core.data.def.DoubleCell;
-import org.knime.core.data.def.IntCell;
-import org.knime.core.data.def.StringCell;
-import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.defaultnodesettings.SettingsModelIntegerBounded;
@@ -49,7 +39,7 @@ public class WaterfallChartNodeModel extends NodeModel {
 	
 	public static final int IN_PORT = 0;    
 	
-    // the logger instance
+//     the logger instance
     private static final NodeLogger logger = NodeLogger
             .getLogger(WaterfallChartNodeModel.class);
     
@@ -97,6 +87,7 @@ public class WaterfallChartNodeModel extends NodeModel {
     		//might switch from array list to array
     		m_chartColumns.add(new ChartColumn(colName, inData[IN_PORT], tarColIndex, binColIndex));
     	}
+
     	return new BufferedDataTable[] {inData[0]};
     }
     

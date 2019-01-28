@@ -53,7 +53,6 @@ public class WaterfallChartNodeView extends NodeView<WaterfallChartNodeModel> im
 			// mouse hover for column
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				int count = 0;
 				for (ChartColumn chartCol : v_panel.getColumns()) {
 					if (chartCol.getViewRepresentation() != null
 							&& chartCol.getViewRepresentation().contains(e.getX(), e.getY())) {
@@ -71,7 +70,6 @@ public class WaterfallChartNodeView extends NodeView<WaterfallChartNodeModel> im
 						popup.show();
 						break;
 					}
-					count++;
 				}
 			}
 

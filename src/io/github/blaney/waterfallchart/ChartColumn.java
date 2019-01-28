@@ -41,23 +41,46 @@ public class ChartColumn {
 	
 	public ChartColumn() {
 		m_columnRowKeys = new LinkedHashSet<RowKey>();
+		System.out.println("WRONG FIRING");
+	}
+	
+	//net column constructor
+	public ChartColumn(final double colTotal, final int totalFields, final double maxValue,
+			final double minValue, final Rectangle viewRepresentation, final Line2D line) {
+		m_columnName = "Net Column";
+		m_columnRowKeys = new LinkedHashSet<RowKey>();
+		m_columnTotal = colTotal;
+		m_numberOfEntries = totalFields;
+		m_minValue = minValue;
+		m_maxValue = maxValue;
+		m_columnRange = (maxValue-minValue);
+		m_columnMean = (colTotal/totalFields);
+		m_viewRepresentation = viewRepresentation;
+		m_columnConnectorLine = line;
 	}
 	
 	public ChartColumn(final String colName, final BufferedDataTable input, final int tarColIndex,
 			final int binColIndex) {
-		m_columnName = colName;
+		System.out.println("MAIN FIRING");
+		m_columnName = colName.trim();
 		m_columnRowKeys = new LinkedHashSet<RowKey>();
 		m_minValue = Double.MAX_VALUE;
 		m_maxValue = Double.MIN_VALUE;
 		for (DataRow row : input) {
 			try {
 				// if the row does not belong in this column, move on
-				if (row.getCell(binColIndex).toString() != m_columnName) {
+				
+				if (!row.getCell(binColIndex).toString().trim().equals(m_columnName)) {
+					System.out.println("continuing");
+					System.out.println(row.getCell(binColIndex).toString());
+					System.out.println(m_columnName);
 					continue;
 				}
 				// prevent erroneous multiple additions of target row values
-				if (m_columnRowKeys.add(row.getKey())) {
+				m_columnRowKeys.add(row.getKey());
+//				if (m_columnRowKeys.add(row.getKey())) {
 					double cellValue = Double.parseDouble(row.getCell(tarColIndex).toString());
+					System.out.println(cellValue);
 					if (cellValue < m_minValue) {
 						setColumnMin(cellValue);
 					}
@@ -65,9 +88,11 @@ public class ChartColumn {
 						setColumnMax(cellValue);
 					}
 					m_columnTotal += cellValue;
+					System.out.println("Col tot: " + m_columnTotal);
 					m_numberOfEntries++;
-				}
+//				}
 			} catch (NullPointerException e) {
+				System.out.println("somethings wrong");
 				// add warning of missing values
 			}
 		}
