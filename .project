@@ -25,4 +25,10 @@
 		<nature>org.eclipse.pde.PluginNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<variableList>
+		<variable>
+			<name>lang3</name>
+			<value>file:/C:/Program%20Files/eclipse/plugins/org.apache.commons.lang3_3.1.0.v201403281430.jar</value>
+		</variable>
+	</variableList>
 </projectDescription>

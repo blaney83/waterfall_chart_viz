@@ -9,7 +9,9 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Line2D;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import javax.swing.JPanel;
 
@@ -42,12 +44,20 @@ public class WaterfallChartViewPanel extends JPanel {
 		int colArrSize = vp_columns.length;
 		// prevent multiple net columns
 		boolean hasNetColumn = false;
+		ArrayList<ChartColumn> sortList = new ArrayList<ChartColumn>(colArrSize);
+		sortList.addAll(Arrays.asList(vp_columns));
+		Collections.sort(sortList);
+		for(int i = 0; i < colArrSize; i++) {
+			vp_columns[i] = sortList.get(i);
+		}
 		if (vp_columns != null && colArrSize > 0) {
 			int aggregateColumnHeight = 0;
 			for (ChartColumn chartCol : vp_columns) {
 
-				if (chartCol.getColumnTotal() > 0 && !chartCol.getColumnName().equals("Net Column")) {
-					aggregateColumnHeight += chartCol.getColumnTotal();
+				if (!chartCol.getColumnName().equals("Net Column")) {
+					if(chartCol.getColumnTotal() > 0) {
+						aggregateColumnHeight += chartCol.getColumnTotal();
+					}
 					continue;
 				}
 				// only executes when repainting
@@ -66,8 +76,6 @@ public class WaterfallChartViewPanel extends JPanel {
 			if (height == 0) {
 				height = HEIGHT;
 			}
-			
-
 
 			width -= rightPadding;
 			height -= bottomPadding;
@@ -90,12 +98,9 @@ public class WaterfallChartViewPanel extends JPanel {
 			g2.drawLine(rightPadding, height, rightPadding, 0);
 			//x-axis
 			g2.drawLine(rightPadding, height, width + rightPadding, height);
-			int labelCount = yLabelOffset - 1;
+			
+			//y-tick marks and labels
 			for(int i = 0; i<yTickMarks; i++) {
-//				if(i == 0) {
-//					g2.drawLine(rightPadding, 0, rightPadding - tickLength, 0);
-//					continue;
-//				}
 				int label = (aggregateColumnHeight/yTickMarks) * i;
 				String[] labelArray = Integer.toString(label).split("");
 				char[] charLabelArr = new char[labelArray.length];
@@ -109,13 +114,9 @@ public class WaterfallChartViewPanel extends JPanel {
 				g2.drawChars(charLabelArr, 0, labelArray.length, rightPadding - tickLength-yLabelOffset, (height -(height/yTickMarks) * i));
 				g2.setColor(Color.LIGHT_GRAY);
 				g2.drawLine(rightPadding, (height/yTickMarks) * i, width + rightPadding, (height/yTickMarks) * i);
-				labelCount--;
 			}
+			//x-tick marks
 			for(int i = 0; i<xTickMarks; i ++) {
-//				if(i == 0) {
-//					g2.drawLine(width, height, width, height + tickLength);
-//					continue;
-//				}
 				g2.setColor(Color.BLACK);
 				g2.setStroke(new BasicStroke(1));
 				g2.drawLine((((i * offset) + (colWidth * i) + rightPadding) + colWidth/2), height, (((i * offset) + (colWidth * i) + rightPadding) + colWidth/2), height + tickLength);
@@ -123,10 +124,11 @@ public class WaterfallChartViewPanel extends JPanel {
 				g2.drawLine((((i * offset) + (colWidth * i) + rightPadding) + colWidth/2), height, (((i * offset) + (colWidth * i) + rightPadding) + colWidth/2), 0);
 			}
 
+			//column creation and labels (x-axis and column totals)
 			int count = 0;
 			int previousHeight = height;
 			int previousX = rightPadding;
-			int netColumnValue = 0;
+			double netColumnValue = 0;
 			int totalFields = 0;
 			double trueMax = Double.MIN_VALUE;
 			double trueMin = Double.MAX_VALUE;
@@ -138,17 +140,19 @@ public class WaterfallChartViewPanel extends JPanel {
 				trueMax = Math.max(trueMax, chartCol.getColumnMax());
 
 				int x = (count * offset) + (colWidth * count) + rightPadding;
-				int colHeight = (int) ((chartCol.getColumnTotal() / aggregateColumnHeight) * height);
+				int colHeight = (int) ((Math.abs(chartCol.getColumnTotal()) / aggregateColumnHeight) * height);
 				Rectangle rect;
 				int startHeight = previousHeight - colHeight;
+				Color color = Color.CYAN;
 				if (chartCol.getColumnTotal() < 0) {
 					startHeight = previousHeight;
+					color = Color.PINK;
 				}
 				if (count == 0) {
 					startHeight = height - colHeight;
 				}
 				
-				Color color = Color.CYAN;
+				
 				
 				if (hasNetColumn && chartCol.getColumnName().equals("Net Column")) {
 					x = (count * offset) + (colWidth * count) + rightPadding;
@@ -162,6 +166,9 @@ public class WaterfallChartViewPanel extends JPanel {
 				chartCol.setColumnConnectorLine(line);
 				chartCol.setViewRepresentation(rect);
 				previousHeight = startHeight;
+				if (chartCol.getColumnTotal() < 0) {
+					previousHeight = (startHeight + colHeight);
+				}
 				previousX = x;
 
 				
@@ -196,7 +203,8 @@ public class WaterfallChartViewPanel extends JPanel {
 					g2.setFont(new Font("Arial", Font.BOLD, 12));
 					xLabelOffset = 20;
 				}
-				g2.drawChars(charLabelArr, 0, labelArray.length, ((count * offset) + (colWidth * count) + rightPadding)+(colWidth/2) - xLabelOffset, height + (tickLength * 4));
+				g2.drawChars(charLabelArr, 0, labelArray.length, ((count * offset) + (colWidth * count) + 
+						rightPadding)+(colWidth/2) - xLabelOffset, height + (tickLength * 4));
 				labelArray = Double.toString(chartCol.getColumnTotal()).split("");
 				charLabelArr = new char[labelArray.length];
 				for(int j = 0; j < labelArray.length; j ++) {
@@ -210,13 +218,14 @@ public class WaterfallChartViewPanel extends JPanel {
 				int x = (count * offset) + (colWidth * count) + rightPadding;
 				int colHeight = (int) ((netColumnValue / aggregateColumnHeight) * height);
 				int startHeight = height - colHeight;
+				System.out.println("x " + x + " sh " + startHeight + " cw " + colWidth + " ch " + colHeight + " ncv " + netColumnValue + " ach " + aggregateColumnHeight + " h " + height);
 				Rectangle rect = new Rectangle(x, startHeight, colWidth, colHeight);
 				Line2D line = new Line2D.Double(previousX, previousHeight, x + colWidth, previousHeight);
 				ChartColumn netColumn = new ChartColumn(netColumnValue, totalFields, trueMax, trueMin, rect, line);
 				Color color = Color.GREEN;
 				// paint net column
 				g2 = (Graphics2D) g;
-				g2.setColor(color);
+				g2.setColor(Color.GREEN);
 				g2.fillRect(rect.x, rect.y, rect.width, rect.height);
 				g2.setColor(Color.ORANGE);
 				g2.setStroke(new BasicStroke(3));
@@ -228,7 +237,8 @@ public class WaterfallChartViewPanel extends JPanel {
 				}
 				g2.setColor(Color.BLACK);
 				g2.setFont(new Font("Arial", Font.BOLD, 12));
-				g2.drawChars(charLabelArr, 0, labelArray.length, ((count * offset) + (colWidth * count) + rightPadding)+(colWidth/2)-20, height + (tickLength * 4));
+				g2.drawChars(charLabelArr, 0, labelArray.length, ((count * offset) + (colWidth * count) 
+						+ rightPadding)+(colWidth/2)-20, height + (tickLength * 4));
 				labelArray = Double.toString(netColumn.getColumnTotal()).split("");
 				charLabelArr = new char[labelArray.length];
 				for(int j = 0; j < labelArray.length; j ++) {
