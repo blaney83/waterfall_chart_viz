@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -212,6 +213,10 @@ public class WaterfallChartNodeModel extends NodeModel {
     		FileOutputStream fos = new FileOutputStream(file);
     		modelContent.saveToXML(fos);
     	}
+    }
+    
+    public List<ChartColumn> getColumnRepresentationModel() {
+    	return m_chartColumns;
     }
 
 }

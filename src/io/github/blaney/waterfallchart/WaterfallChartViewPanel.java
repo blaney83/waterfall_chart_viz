@@ -19,7 +19,7 @@ public class WaterfallChartViewPanel extends JPanel {
 	private static final int WIDTH = 800;
 	private static final int HEIGHT = 650;
 
-	// constructor
+	// constructors
 	public WaterfallChartViewPanel(final ChartColumn[] columns) {
 		vp_columns = columns;
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));

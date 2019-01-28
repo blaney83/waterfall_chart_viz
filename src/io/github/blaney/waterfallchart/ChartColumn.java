@@ -34,7 +34,11 @@ public class ChartColumn {
 	private static final String COL_RANGE = "colRange";
 	private static final String COL_MEAN = "colMean";
 	private static final String COL_NUM_ENTRIES = "colNumEntries";
-
+	//hilite related keys
+	private boolean m_isSelected;
+	private boolean m_isHilite;
+	
+	
 	public ChartColumn() {
 		m_columnRowKeys = new LinkedHashSet<RowKey>();
 	}
@@ -55,10 +59,10 @@ public class ChartColumn {
 				if (m_columnRowKeys.add(row.getKey())) {
 					double cellValue = Double.parseDouble(row.getCell(tarColIndex).toString());
 					if (cellValue < m_minValue) {
-						m_minValue = cellValue;
+						setColumnMin(cellValue);
 					}
 					if (cellValue > m_maxValue) {
-						m_maxValue = cellValue;
+						setColumnMax(cellValue);
 					}
 					m_columnTotal += cellValue;
 					m_numberOfEntries++;
@@ -70,6 +74,10 @@ public class ChartColumn {
 		m_columnMean = m_columnTotal / m_numberOfEntries;
 		m_columnRange = Math.abs(m_minValue - m_maxValue);
 
+	}
+	
+	public Set<RowKey> getRowKeys(){
+		return m_columnRowKeys;
 	}
 
 	public Rectangle getViewRepresentation() {
@@ -86,6 +94,10 @@ public class ChartColumn {
 
 	public void setColumnConnectorLine(final Line2D line) {
 		m_columnConnectorLine = line;
+	}
+	
+	public String getColumnName() {
+		return m_columnName;
 	}
 
 	public double getColumnTotal() {
@@ -140,6 +152,21 @@ public class ChartColumn {
 		m_maxValue = thisVal;
 	}
 	
+	public void setHilited(final boolean isHilite) {
+		m_isHilite = isHilite;
+	}
+	
+	public boolean isHilited() {
+		return m_isHilite;
+	}
+	
+	public void setSelected(final boolean selected) {
+		m_isSelected = selected;
+	}
+	
+	public boolean isSelected() {
+		return m_isSelected;
+	}
 
 	public void saveTo(final ModelContentWO modelContent) {
 		RowKey[] keysArr = new RowKey[m_columnRowKeys.size()];
