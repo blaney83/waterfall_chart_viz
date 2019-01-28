@@ -7,31 +7,24 @@
     </shortDescription>
     
     <fullDescription>
-        <intro>Insert long description here...</intro>
-        
-        
-        <option name="short name of first option (like in the dialog)">description of first option</option>
-        <option name="short name of second option (like in the dialog)">description of second option</option>
-        <!-- possibly more options that can also be grouped by tabs -->
-        <!--
+        <intro>This node allows you to visualize the cumulative effect various bin are having on an net result. Common use cases include finances
+        and modeling change over time.
+        </intro>
+
         <tab name="Standard Options">
-            <option name="short name of first option (like in the dialog)">description of first option</option>
-            <option name="short name of second option (like in the dialog)">description of second option</option>
+            <option name="Choose a Binned Column">Select a column from the input table (x-axis). This column should be BINNED (via a previous node or inherently as nominal values). For proper viewing, it is not recommended to use a large quantity of bins as this may affect the display of the chart.</option>
+            <option name="Choose a Target Column">Select a column from the input table (y-axis). This column must be numeric; specifically compatible with type Double (Boolean, Double, Integer, Long, SOTA) and is used to calculate aggregate sums for each binned column displayed on the chart.</option>
         </tab>
-        <tab name="Advanced Options">
-            <option name="short name of first advanced option (like in the dialog)">description of first advanced option</option>
+        <tab name="View Options">
+            <option name="Coming Soon">Coming Soon</option>
         </tab>
-        -->
     </fullDescription>
     
     <ports>
-        <inPort index="0" name="In-Port name">Description of first input port...</inPort>
-        <!-- possibly more input ports here-->
-        <outPort index="0" name="Out-Port name">Description of first output port...</outPort>
-        <!-- possibly more output ports here-->
+        <inPort index="0" name="Input Table">Takes in a table with minimum 2x columns: 1x binned, 1x numeric.</inPort>
+        <outPort index="0" name="Output Table">Outputs unaltered input table following the creation of the view.</outPort>
     </ports>    
     <views>
-        <view index="0" name="name of first view">Description of first view...</view>
-        <!--view index="1" name="name of second view">Description of second view...</view-->
+        <view index="0" name="Waterfall Chart">Waterfall Chart</view>
     </views>
 </knimeNode>

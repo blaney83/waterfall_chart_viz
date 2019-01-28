@@ -9,6 +9,8 @@ import java.awt.geom.Line2D;
 
 import javax.swing.JPanel;
 
+import org.knime.core.data.property.ColorAttr;
+
 
 public class WaterfallChartViewPanel extends JPanel {
 	// v1
@@ -74,17 +76,26 @@ public class WaterfallChartViewPanel extends JPanel {
 				chartCol.setColumnConnectorLine(line);
 				chartCol.setViewRepresentation(rect);
 				previousHeight += chartCol.getColumnTotal();
-				count ++;
+
 				
 				Color color = Color.CYAN;
-				
-				//add hilite colors
+				//KNIME hilite colors
+				if(chartCol.isHilited()) {
+					color = ColorAttr.HILITE;
+				}
+				if(chartCol.isSelected()) {
+					color = ColorAttr.SELECTED;
+				}
+				if(chartCol.isHilited() && chartCol.isSelected()) {
+					color = ColorAttr.SELECTED_HILITE;
+				}
 				
 				Graphics2D g2 = (Graphics2D)g;
 				g2.setColor(color);
 				g2.fillRect(rect.x, rect.y, rect.width, rect.height);
 				g2.setColor(Color.ORANGE);
 				g2.drawLine((int)line.getX1(), (int)line.getY1(), (int)line.getX2(), (int)line.getY2());	
+				count ++;
 			}
 		}
 	}
