@@ -219,7 +219,7 @@ public class ChartColumn implements Comparable<ChartColumn> {
 
 	@Override
 	public int compareTo(final ChartColumn otherChartCol) {
-		if(otherChartCol.getColumnName().equals("Net Column")) {
+		if(otherChartCol.getColumnName().equals("Net Column") || m_columnName.equals("Net Column")) {
 			return -1;
 		}
 		int compResult = Double.compare(otherChartCol.getColumnTotal(), m_columnTotal);

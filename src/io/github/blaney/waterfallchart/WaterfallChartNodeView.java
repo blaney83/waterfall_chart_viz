@@ -50,30 +50,30 @@ public class WaterfallChartNodeView extends NodeView<WaterfallChartNodeModel> im
 		v_panel = new WaterfallChartViewBorderPanel(new WaterfallChartViewPanel(new ChartColumn[0]));
 		setComponent(v_panel);
 		v_selected = new LinkedHashSet<ChartColumn>();
-
-		v_panel.addMouseListener(new MouseAdapter() {
+//		v_panel.addMouseListener(new MouseAdapter() {
+		v_panel.getChartPanel().addMouseListener(new MouseAdapter() {
 			// mouse hover for column
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				for (ChartColumn chartCol : v_panel.getColumns()) {
-					if (chartCol.getViewRepresentation() != null
-							&& chartCol.getViewRepresentation().contains(e.getX(), e.getY())) {
-						// add fail safe ternary null checks for sb methods
-						StringBuilder sBuilder = new StringBuilder(chartCol.getColumnName());
-						sBuilder.append("-\nColumn Number of Rows: " + chartCol.getNumberOfEntries());
-						sBuilder.append("-\nColumn Net Value: " + chartCol.getColumnTotal());
-						sBuilder.append("-\nColumn Mean: " + chartCol.getColumnMean());
-						sBuilder.append("-\nColumn Max: " + chartCol.getColumnMax());
-						sBuilder.append("-\nColumn Min: " + chartCol.getColumnMin());
-						sBuilder.append("-\nColumn Range: " + chartCol.getColumnRange());
-						JLabel text = new JLabel(sBuilder.toString());
-						popup = PopupFactory.getSharedInstance().getPopup(e.getComponent(), text, e.getXOnScreen(),
-								e.getYOnScreen());
-						popup.show();
-						break;
-					}
-				}
-			}
+//			@Override
+//			public void mouseEntered(MouseEvent e) {
+//				for (ChartColumn chartCol : v_panel.getColumns()) {
+//					if (chartCol.getViewRepresentation() != null
+//							&& chartCol.getViewRepresentation().contains(e.getX(), e.getY())) {
+//						// add fail safe ternary null checks for sb methods
+//						StringBuilder sBuilder = new StringBuilder(chartCol.getColumnName());
+//						sBuilder.append("-\nColumn Number of Rows: " + chartCol.getNumberOfEntries());
+//						sBuilder.append("-\nColumn Net Value: " + chartCol.getColumnTotal());
+//						sBuilder.append("-\nColumn Mean: " + chartCol.getColumnMean());
+//						sBuilder.append("-\nColumn Max: " + chartCol.getColumnMax());
+//						sBuilder.append("-\nColumn Min: " + chartCol.getColumnMin());
+//						sBuilder.append("-\nColumn Range: " + chartCol.getColumnRange());
+//						JLabel text = new JLabel(sBuilder.toString());
+//						popup = PopupFactory.getSharedInstance().getPopup(e.getComponent(), text, e.getXOnScreen(),
+//								e.getYOnScreen());
+//						popup.show();
+//						break;
+//					}
+//				}
+//			}
 
 			// column selection method
 			@Override

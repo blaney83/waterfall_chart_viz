@@ -109,6 +109,10 @@ public class WaterfallChartViewBorderPanel extends JPanel {
 		return graphPanel.getColumns();
 	}
 	
+	public WaterfallChartViewPanel getChartPanel() {
+		return graphPanel;
+	}
+	
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
