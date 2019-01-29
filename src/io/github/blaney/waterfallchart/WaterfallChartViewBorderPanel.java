@@ -53,7 +53,7 @@ public class WaterfallChartViewBorderPanel extends JPanel {
 			Graphics2D gg = (Graphics2D) g;
 			gg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-			Font font = new Font("Arial", Font.PLAIN, 15);
+			Font font = new Font("Arial", Font.BOLD, 20);
 
 			String string = CFG_KEY_Y_AXIS_LABEL;
 
@@ -90,7 +90,7 @@ public class WaterfallChartViewBorderPanel extends JPanel {
 			Graphics2D gg = (Graphics2D) g;
 			gg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-			Font font = new Font("Arial", Font.PLAIN, 15);
+			Font font = new Font("Arial", Font.BOLD, 20);
 
 			String string = CFG_KEY_X_AXIS_LABEL;
 
@@ -100,7 +100,7 @@ public class WaterfallChartViewBorderPanel extends JPanel {
 
 			gg.setFont(font);
 
-			gg.drawString(string, (getWidth() - width) / 2, 11);
+			gg.drawString(string, (getWidth() - width) / 2, 15);
 		}
 
 	}
