@@ -33,11 +33,11 @@ public class WaterfallChartNodeDialog extends DefaultNodeSettingsPane {
 		//		3) value prefix ("$", "euro", etc.)
 		//		4) chrono-binning
 		//		5) in the views tab, add a pixel adjustment for the line between columns
-		//		6) need to disable selection of net column
+		//v		6) need to disable selection of net column
 		//		7) fix stat display for columns
-		//		8) add axis
-		//		9) add chart labels and column labels
-		//		10) implement comparator in ChartColumn class
-		//		11) then sort the view columns before display (largest->smallest)
+		//v		8) add axis
+		//v		9) add chart labels and column labels
+		//v		10) implement comparator in ChartColumn class
+		//v		11) then sort the view columns before display (largest->smallest)
 	}
 }

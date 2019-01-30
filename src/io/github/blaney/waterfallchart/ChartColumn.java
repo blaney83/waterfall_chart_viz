@@ -48,9 +48,9 @@ public class ChartColumn implements Comparable<ChartColumn> {
 
 	// net column constructor
 	public ChartColumn(final double colTotal, final int totalFields, final double maxValue, final double minValue,
-			final Rectangle viewRepresentation, final Line2D line) {
+			final Rectangle viewRepresentation, final Line2D line, final Set<RowKey> allRowKeys) {
 		m_columnName = "Net Column";
-		m_columnRowKeys = new LinkedHashSet<RowKey>();
+		m_columnRowKeys = allRowKeys;
 		m_columnTotal = colTotal;
 		m_numberOfEntries = totalFields;
 		m_minValue = minValue;
@@ -77,8 +77,6 @@ public class ChartColumn implements Comparable<ChartColumn> {
 				}
 
 				m_columnRowKeys.add(row.getKey());
-				// prevent erroneous multiple additions of target row values
-//				if (m_columnRowKeys.add(row.getKey())) {
 				double cellValue = Double.parseDouble(row.getCell(tarColIndex).toString());
 				if (cellValue < m_minValue) {
 					setColumnMin(cellValue);
@@ -88,7 +86,6 @@ public class ChartColumn implements Comparable<ChartColumn> {
 				}
 				m_columnTotal += cellValue;
 				m_numberOfEntries++;
-//				}
 			} catch (NullPointerException e) {
 				// add warning of missing values
 			}
@@ -219,7 +216,7 @@ public class ChartColumn implements Comparable<ChartColumn> {
 
 	@Override
 	public int compareTo(final ChartColumn otherChartCol) {
-		if(otherChartCol.getColumnName().equals("Net Column") || m_columnName.equals("Net Column")) {
+		if(otherChartCol.getColumnName().equals("Net Column")) {
 			return -1;
 		}
 		int compResult = Double.compare(otherChartCol.getColumnTotal(), m_columnTotal);
@@ -244,41 +241,21 @@ public class ChartColumn implements Comparable<ChartColumn> {
             return false;
         }
         ChartColumn otherChartCol = (ChartColumn) obj;
-        return new EqualsBuilder()
-        		.append(m_columnRowKeys, otherChartCol.getRowKeys())
-        		.append(m_columnName, otherChartCol.getColumnName())
-        		.append(m_columnTotal, otherChartCol.getColumnTotal())
-        		.append(m_minValue, otherChartCol.getColumnMin())
-        		.append(m_maxValue, otherChartCol.getColumnMax())
-        		.append(m_columnRange, otherChartCol.getColumnRange())
-        		.append(m_columnMean, otherChartCol.getColumnMean())
-        		.append(m_numberOfEntries, otherChartCol.getNumberOfEntries())
-        		.append(m_viewRepresentation, otherChartCol.getViewRepresentation())
-        		.append(m_columnConnectorLine, otherChartCol.getColumnConnectorLine())
-        		.isEquals();
-//        boolean keyCheck = m_columnRowKeys.equals(otherChartCol.getRowKeys());
-//        boolean nameCheck = m_columnName.equals(otherChartCol.getColumnName());
-//        int entriesCheck = Integer.compare(m_numberOfEntries, otherChartCol.getNumberOfEntries());
-//        int totalCheck = Integer.compare((int)m_columnTotal, (int)otherChartCol.getColumnTotal());
-//        if(keyCheck && nameCheck && entriesCheck == 0 && totalCheck == 0) {
-//        	return true;
-//        }
-//        return false;
+        boolean keyCheck = m_columnRowKeys.equals(otherChartCol.getRowKeys());
+        boolean nameCheck = m_columnName.equals(otherChartCol.getColumnName());
+        int entriesCheck = Integer.compare(m_numberOfEntries, otherChartCol.getNumberOfEntries());
+        int totalCheck = Integer.compare((int)m_columnTotal, (int)otherChartCol.getColumnTotal());
+        if(keyCheck && nameCheck && entriesCheck == 0 && totalCheck == 0) {
+        	return true;
+        }
+        return false;
 	}
 	
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder()
-        		.append(m_columnRowKeys)
-        		.append(m_columnName)
-        		.append(m_columnTotal)
-        		.append(m_minValue)
-        		.append(m_maxValue)
-        		.append(m_columnRange)
-        		.append(m_columnMean)
-        		.append(m_numberOfEntries)
-        		.append(m_viewRepresentation)
-        		.append(m_columnConnectorLine)
-				.hashCode();
+		return m_columnRowKeys.hashCode() + 
+				m_columnName.hashCode() +
+				m_numberOfEntries +
+				(int)m_columnTotal;
 	}
 }

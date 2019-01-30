@@ -15,10 +15,13 @@ import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.knime.core.data.RowKey;
 import org.knime.core.data.property.ColorAttr;
 
 public class WaterfallChartViewPanel extends JPanel {
@@ -47,7 +50,6 @@ public class WaterfallChartViewPanel extends JPanel {
 	@Override
 	public void paint(final Graphics g) {
 		super.paint(g);
-		vp_columns = sortColumns(vp_columns);
 		int colArrSize = vp_columns.length;
 		// prevent multiple net columns
 		boolean hasNetColumn = false;
@@ -83,21 +85,25 @@ public class WaterfallChartViewPanel extends JPanel {
 			BasicStroke axisStroke = new BasicStroke(axisStrokeWidth);
 			BasicStroke gridStroke = new BasicStroke(gridStrokeWidth);
 			BasicStroke intraColumnStroke = new BasicStroke(intraColumnLineStrokeWidth);
-			
-			for (ChartColumn chartCol : vp_columns) {
+			Set<RowKey> allTableRows = new LinkedHashSet<RowKey>();
 
-				if (!chartCol.getColumnName().equals("Net Column")) {
-					if (chartCol.getColumnTotal() > 0) {
-						aggregateColumnHeight += chartCol.getColumnTotal();
+			for (ChartColumn chartCol : vp_columns) {
+				if (chartCol != null)
+					if (!chartCol.getColumnName().equals("Net Column")) {
+						allTableRows.addAll(chartCol.getRowKeys());
+						if (chartCol.getColumnTotal() > 0) {
+							aggregateColumnHeight += chartCol.getColumnTotal();
+						} else {
+							negativeAggValue += chartCol.getColumnTotal();
+						}
 					} else {
-						negativeAggValue += chartCol.getColumnTotal();
+						hasNetColumn = true;
 					}
-					continue;
-				}
-				// only executes when repainting
-				hasNetColumn = true;
 			}
-			//conditional variable modification
+			// only executes when repainting
+			
+
+			// conditional variable modification
 			if (width == 0) {
 				width = WIDTH;
 			}
@@ -109,6 +115,8 @@ public class WaterfallChartViewPanel extends JPanel {
 			int colWidth = (width - (10 * colArrSize + 1)) / (colArrSize + 1);
 			if (hasNetColumn) {
 				colWidth = (width - (10 * colArrSize)) / (colArrSize);
+			}else {
+				vp_columns = sortColumns(vp_columns);
 			}
 
 			// axis drawing
@@ -167,7 +175,10 @@ public class WaterfallChartViewPanel extends JPanel {
 			int totalFields = 0;
 			double trueMax = Double.MIN_VALUE;
 			double trueMin = Double.MAX_VALUE;
+			// if we havent created the net column yet, create it now.
+			if (!hasNetColumn) {
 
+			}
 			for (ChartColumn chartCol : vp_columns) {
 				netColumnValue += chartCol.getColumnTotal();
 				totalFields += chartCol.getNumberOfEntries();
@@ -263,7 +274,9 @@ public class WaterfallChartViewPanel extends JPanel {
 						+ netColumnValue + " ach " + aggregateColumnHeight + " h " + height);
 				Rectangle rect = new Rectangle(x, startHeight, colWidth, colHeight);
 				Line2D line = new Line2D.Double(previousX, startHeight, x + colWidth, startHeight);
-				ChartColumn netColumn = new ChartColumn(netColumnValue, totalFields, trueMax, trueMin, rect, line);
+				ChartColumn netColumn = new ChartColumn(netColumnValue, totalFields, trueMax, trueMin, rect, line, allTableRows);
+				netColumn.setHilited(false);
+				netColumn.setSelected(false);
 				Color color = netColumnColor;
 				// paint net column
 				g2 = (Graphics2D) g;
@@ -295,7 +308,7 @@ public class WaterfallChartViewPanel extends JPanel {
 					initViewColumnArr[i] = vp_columns[i];
 				}
 				initViewColumnArr[initViewColumnArr.length - 1] = netColumn;
-				vp_columns = sortColumns(initViewColumnArr);
+				vp_columns = initViewColumnArr;
 			}
 
 		}
@@ -307,6 +320,7 @@ public class WaterfallChartViewPanel extends JPanel {
 	}
 
 	private ChartColumn[] sortColumns(final ChartColumn[] colArr) {
+		System.out.println("1");
 		ArrayList<ChartColumn> sortList = new ArrayList<ChartColumn>(colArr.length);
 		sortList.addAll(Arrays.asList(colArr));
 		Collections.sort(sortList);

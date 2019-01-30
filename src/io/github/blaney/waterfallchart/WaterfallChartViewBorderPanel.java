@@ -22,27 +22,29 @@ public class WaterfallChartViewBorderPanel extends JPanel {
 	public WaterfallChartViewBorderPanel(final WaterfallChartViewPanel wfcvp) {
 
 		setLayout(new BorderLayout());
-		JLabel title = new JLabel(CFG_KEY_CHART_TITLE);
-		title.setFont(new Font("Arial", Font.BOLD, 25));
-		title.setHorizontalAlignment(JLabel.CENTER);
 
 		graphPanel = wfcvp;
 
-		VerticalPanel vertPanel = new VerticalPanel();
+		VerticalPanel vertPanel = new VerticalPanel(CFG_KEY_Y_AXIS_LABEL);
+		VerticalPanel emptyPanel = new VerticalPanel("");
 
-		HorizontalPanel horiPanel = new HorizontalPanel();
+		HorizontalPanel horiPanel = new HorizontalPanel(CFG_KEY_X_AXIS_LABEL);
+		HorizontalPanel horiPanel1 = new HorizontalPanel(CFG_KEY_CHART_TITLE, 40, new Font("Arial", Font.BOLD, 25));
 
-		add(title, BorderLayout.NORTH);
+		add(horiPanel1, BorderLayout.NORTH);
 		add(horiPanel, BorderLayout.SOUTH);
 		add(vertPanel, BorderLayout.WEST);
+		add(emptyPanel, BorderLayout.EAST);
 		add(graphPanel, BorderLayout.CENTER);
 
 	}
 
 	class VerticalPanel extends JPanel {
+		private String yAxisLabel;
 
-		public VerticalPanel() {
+		public VerticalPanel(final String yAxisLabel) {
 			setPreferredSize(new Dimension(25, 0));
+			this.yAxisLabel = yAxisLabel;
 		}
 
 		@Override
@@ -55,15 +57,13 @@ public class WaterfallChartViewBorderPanel extends JPanel {
 
 			Font font = new Font("Arial", Font.BOLD, 20);
 
-			String string = CFG_KEY_Y_AXIS_LABEL;
-
 			FontMetrics metrics = g.getFontMetrics(font);
-			int width = metrics.stringWidth(string);
+			int width = metrics.stringWidth(yAxisLabel);
 			int height = metrics.getHeight();
 
 			gg.setFont(font);
 
-			drawRotate(gg, getWidth(), (getHeight() + width) / 2, 270, string);
+			drawRotate(gg, getWidth(), (getHeight() + width) / 2, 270, yAxisLabel);
 		}
 
 		public void drawRotate(Graphics2D gg, double x, double y, int angle, String text) {
@@ -77,9 +77,19 @@ public class WaterfallChartViewBorderPanel extends JPanel {
 	}
 
 	class HorizontalPanel extends JPanel {
-
-		public HorizontalPanel() {
+		private String panelLabel;
+		private Font font = new Font("Arial", Font.BOLD, 20);
+		
+		
+		public HorizontalPanel(final String panelLabel) {
 			setPreferredSize(new Dimension(0, 25));
+			this.panelLabel = panelLabel;
+		}
+		
+		public HorizontalPanel(final String panelLabel, final int panelHeight, final Font font) {
+			setPreferredSize(new Dimension(0, panelHeight));
+			this.panelLabel = panelLabel;
+			this.font = font;
 		}
 
 		@Override
@@ -89,18 +99,13 @@ public class WaterfallChartViewBorderPanel extends JPanel {
 
 			Graphics2D gg = (Graphics2D) g;
 			gg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-			Font font = new Font("Arial", Font.BOLD, 20);
-
-			String string = CFG_KEY_X_AXIS_LABEL;
-
 			FontMetrics metrics = g.getFontMetrics(font);
-			int width = metrics.stringWidth(string);
+			int width = metrics.stringWidth(panelLabel);
 			int height = metrics.getHeight();
 
 			gg.setFont(font);
 
-			gg.drawString(string, (getWidth() - width) / 2, 15);
+			gg.drawString(panelLabel, (getWidth() - width) / 2, 20);
 		}
 
 	}
