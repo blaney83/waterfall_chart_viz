@@ -1,7 +1,7 @@
 # waterfall_chart_viz
 #### Creates a descriptive waterfall chart view when provided Data Table containing a binned column and a target column.    
 
-This node allows you to visualize the bifurcated cummulative effect various bin are having on an net column output. Common applications include finances and modeling change over time.
+This node allows you to visualize the bifurcated cummulative effect various bins have on net column output. Common applications include finances and modeling change over time.
 
 ![Chart View](charts.png)
 
@@ -25,4 +25,4 @@ Outputs unaltered input table following the creation of the view.
 ## Notes
 Currently this node supports both net positive and negative net columns. Feel free to open an issue for any bugs that arise.
 
-![Financials](finaNcials.PNG)
+![Financials](financials.PNG)
