@@ -1,6 +1,7 @@
 package io.github.blaney.waterfallchart;
 
 import java.awt.event.ActionEvent;
+
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -8,11 +9,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.JLabel;
+//import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.Popup;
-import javax.swing.PopupFactory;
+//import javax.swing.Popup;
+//import javax.swing.PopupFactory;
 
 import org.knime.core.data.RowKey;
 import org.knime.core.node.NodeView;
@@ -30,7 +31,7 @@ public class WaterfallChartNodeView extends NodeView<WaterfallChartNodeModel> im
 
 	// Custom Components
 	private WaterfallChartViewBorderPanel v_panel;
-	private Popup popup;
+//	private Popup popup;
 
 	// JMenu items
 	private final JMenuItem v_hilite;
@@ -50,27 +51,27 @@ public class WaterfallChartNodeView extends NodeView<WaterfallChartNodeModel> im
 		v_selected = new LinkedHashSet<ChartColumn>();
 		v_panel.getChartPanel().addMouseListener(new MouseAdapter() {
 			// mouse hover for column
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				for (ChartColumn chartCol : v_panel.getColumns()) {
-					if (chartCol.getViewRepresentation() != null
-							&& chartCol.getViewRepresentation().contains(e.getX(), e.getY())) {
-						// add fail safe ternary null checks for sb methods
-						StringBuilder sBuilder = new StringBuilder(chartCol.getColumnName());
-						sBuilder.append("-\nColumn Number of Rows: " + chartCol.getNumberOfEntries());
-						sBuilder.append("-\nColumn Net Value: " + chartCol.getColumnTotal());
-						sBuilder.append("-\nColumn Mean: " + chartCol.getColumnMean());
-						sBuilder.append("-\nColumn Max: " + chartCol.getColumnMax());
-						sBuilder.append("-\nColumn Min: " + chartCol.getColumnMin());
-						sBuilder.append("-\nColumn Range: " + chartCol.getColumnRange());
-						JLabel text = new JLabel(sBuilder.toString());
-						popup = PopupFactory.getSharedInstance().getPopup(e.getComponent(), text, e.getXOnScreen(),
-								e.getYOnScreen());
-						popup.show();
-						break;
-					}
-				}
-			}
+//			@Override
+//			public void mouseEntered(MouseEvent e) {
+//				for (ChartColumn chartCol : v_panel.getColumns()) {
+//					if (chartCol.getViewRepresentation() != null
+//							&& chartCol.getViewRepresentation().contains(e.getX(), e.getY())) {
+//						// add fail safe ternary null checks for sb methods
+//						StringBuilder sBuilder = new StringBuilder(chartCol.getColumnName());
+//						sBuilder.append("-\nColumn Number of Rows: " + chartCol.getNumberOfEntries());
+//						sBuilder.append("-\nColumn Net Value: " + chartCol.getColumnTotal());
+//						sBuilder.append("-\nColumn Mean: " + chartCol.getColumnMean());
+//						sBuilder.append("-\nColumn Max: " + chartCol.getColumnMax());
+//						sBuilder.append("-\nColumn Min: " + chartCol.getColumnMin());
+//						sBuilder.append("-\nColumn Range: " + chartCol.getColumnRange());
+//						JLabel text = new JLabel(sBuilder.toString());
+//						popup = PopupFactory.getSharedInstance().getPopup(e.getComponent(), text, e.getXOnScreen(),
+//								e.getYOnScreen());
+//						popup.show();
+//						break;
+//					}
+//				}
+//			}
 
 			// column selection method
 			@Override

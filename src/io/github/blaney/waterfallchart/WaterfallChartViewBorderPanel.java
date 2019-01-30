@@ -1,6 +1,7 @@
 package io.github.blaney.waterfallchart;
 
 import java.awt.BorderLayout;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -8,11 +9,11 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class WaterfallChartViewBorderPanel extends JPanel {
-	
+	private static final long serialVersionUID = 1L;
+
 	private WaterfallChartViewPanel graphPanel;
 	
 	private static final String CFG_KEY_X_AXIS_LABEL = "Bin Number";
@@ -40,6 +41,7 @@ public class WaterfallChartViewBorderPanel extends JPanel {
 	}
 
 	class VerticalPanel extends JPanel {
+		private static final long serialVersionUID = 1L;
 		private String yAxisLabel;
 
 		public VerticalPanel(final String yAxisLabel) {
@@ -59,7 +61,6 @@ public class WaterfallChartViewBorderPanel extends JPanel {
 
 			FontMetrics metrics = g.getFontMetrics(font);
 			int width = metrics.stringWidth(yAxisLabel);
-			int height = metrics.getHeight();
 
 			gg.setFont(font);
 
@@ -77,6 +78,8 @@ public class WaterfallChartViewBorderPanel extends JPanel {
 	}
 
 	class HorizontalPanel extends JPanel {
+		private static final long serialVersionUID = 1L;
+		
 		private String panelLabel;
 		private Font font = new Font("Arial", Font.BOLD, 20);
 		
@@ -101,7 +104,6 @@ public class WaterfallChartViewBorderPanel extends JPanel {
 			gg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			FontMetrics metrics = g.getFontMetrics(font);
 			int width = metrics.stringWidth(panelLabel);
-			int height = metrics.getHeight();
 
 			gg.setFont(font);
 

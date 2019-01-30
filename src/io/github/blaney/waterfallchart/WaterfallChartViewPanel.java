@@ -1,16 +1,13 @@
 package io.github.blaney.waterfallchart;
 
 import java.awt.BasicStroke;
-import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +15,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.knime.core.data.RowKey;
@@ -202,6 +198,7 @@ public class WaterfallChartViewPanel extends JPanel {
 
 					if (hasNetColumn && chartCol.getColumnName().equals("Net Column")) {
 						x = (count * offset) + (colWidth * count) + rightPadding;
+						colHeight =  height -previousHeight;
 						startHeight = height - colHeight;
 						color = netColumnColor;
 					}
@@ -271,6 +268,7 @@ public class WaterfallChartViewPanel extends JPanel {
 					// create net column
 					int x = (count * offset) + (colWidth * count) + rightPadding;
 					int colHeight = (int) ((netColumnValue / aggregateColumnHeight) * height);
+					colHeight = height - previousHeight;
 					int startHeight = height - colHeight;
 					System.out.println("x " + x + " sh " + startHeight + " cw " + colWidth + " ch " + colHeight
 							+ " ncv " + netColumnValue + " ach " + aggregateColumnHeight + " h " + height);
@@ -402,7 +400,8 @@ public class WaterfallChartViewPanel extends JPanel {
 
 					if (hasNetColumn && chartCol.getColumnName().equals("Net Column")) {
 						x = (count * offset) + (colWidth * count) + rightPadding;
-						startHeight = previousHeight - colHeight;
+						startHeight = bottomPadding;
+						colHeight = previousHeight-bottomPadding;
 						color = netNegativeColumnColor;
 					}
 					rect = new Rectangle(x, startHeight, colWidth, colHeight);
@@ -479,7 +478,7 @@ public class WaterfallChartViewPanel extends JPanel {
 				if (!hasNetColumn) {
 					// create net column
 					int x = (count * offset) + (colWidth * count) + rightPadding;
-					int colHeight = (int) ((netColumnValue / negativeAggValue) * height);
+					int colHeight = previousHeight-bottomPadding;
 					int startHeight = bottomPadding;
 					System.out.println("x " + x + " sh " + startHeight + " cw " + colWidth + " ch " + colHeight
 							+ " ncv " + netColumnValue + " ach " + aggregateColumnHeight + " h " + height);

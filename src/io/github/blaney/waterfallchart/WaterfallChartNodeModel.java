@@ -1,6 +1,7 @@
 package io.github.blaney.waterfallchart;
 
 import java.io.File;
+
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,7 +24,7 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.ModelContent;
 import org.knime.core.node.ModelContentRO;
 import org.knime.core.node.ModelContentWO;
-import org.knime.core.node.NodeLogger;
+//import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -39,7 +40,7 @@ public class WaterfallChartNodeModel extends NodeModel {
 	public static final int IN_PORT = 0;
 
 //     the logger instance
-	private static final NodeLogger logger = NodeLogger.getLogger(WaterfallChartNodeModel.class);
+//	private static final NodeLogger logger = NodeLogger.getLogger(WaterfallChartNodeModel.class);
 
 	// internally saved setting keys
 	static final String CFGKEY_BINNED_COLUMN_NAME = "binnedColumnName";
@@ -79,6 +80,7 @@ public class WaterfallChartNodeModel extends NodeModel {
 		int tarColIndex = inData[IN_PORT].getDataTableSpec().findColumnIndex(m_targetColumn.getStringValue());
 		m_columnNames = retrieveBins(inData[IN_PORT], binColIndex);
 		m_numColumns.setIntValue(m_columnNames.size());
+		System.out.println(m_numColumns.getIntValue());
 		if (m_numColumns.getIntValue() > 20) {
 			// send warning: bad visibility likely
 		}
@@ -179,9 +181,11 @@ public class WaterfallChartNodeModel extends NodeModel {
 		ModelContentRO modelContent = ModelContent.loadFromXML(fis);
 
 		try {
+			m_numColumns.setIntValue(modelContent.getInt(CFGKEY_NUM_COLUMNS));
 			// should modify save to use numeric iterable for loop for consistency
 			// should also switch m_chartColumns from ArrayList to ChartColumn[]
 			for (int i = 0; i < m_numColumns.getIntValue(); i++) {
+				System.out.println("Loading columns");
 				ChartColumn chartCol = new ChartColumn();
 				ModelContentRO subContent = modelContent.getModelContent(CHART_COLUMN + i);
 				chartCol.loadFrom(subContent);
@@ -198,8 +202,10 @@ public class WaterfallChartNodeModel extends NodeModel {
 			throws IOException, CanceledExecutionException {
 		if (m_chartColumns != null) {
 			ModelContent modelContent = new ModelContent(INTERNAL_MODEL);
+			modelContent.addInt(CFGKEY_NUM_COLUMNS, m_chartColumns.size());
 			int count = 0;
 			for (ChartColumn chartCol : m_chartColumns) {
+				System.out.println("saving col");
 				ModelContentWO subContent = modelContent.addModelContent(CHART_COLUMN + count);
 				chartCol.saveTo(subContent);
 				count++;

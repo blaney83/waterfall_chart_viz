@@ -3,7 +3,7 @@
 
 This node allows you to visualize the bifurcated cummulative effect various bin are having on an net column output. Common applications include finances and modeling change over time.
 
-![Chart View] (/charts.png)
+![Chart View](charts.png)
 
 ## Options
 ### Choose a Binned Column
@@ -24,3 +24,5 @@ Outputs unaltered input table following the creation of the view.
 
 ## Notes
 Currently this node supports both net positive and negative net columns. Feel free to open an issue for any bugs that arise.
+
+![Financials](finaNcials.PNG)

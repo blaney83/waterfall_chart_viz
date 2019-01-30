@@ -2,6 +2,7 @@ package io.github.blaney.waterfallchart;
 
 import java.awt.Rectangle;
 
+
 import java.awt.geom.Line2D;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -13,9 +14,6 @@ import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.ModelContentRO;
 import org.knime.core.node.ModelContentWO;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class ChartColumn implements Comparable<ChartColumn> {
 	// internal keys
@@ -205,6 +203,7 @@ public class ChartColumn implements Comparable<ChartColumn> {
 		// loading internals
 		RowKey[] keysArr = modelContent.getRowKeyArray(COL_KEY_SET);
 		m_columnRowKeys.addAll(Arrays.asList(keysArr));
+		System.out.println(m_columnRowKeys.size());
 		setColumnName(modelContent.getString(COL_NAME));
 		setColumnTotal(modelContent.getDouble(COL_TOTAL));
 		setColumnMin(modelContent.getDouble(COL_MIN));
